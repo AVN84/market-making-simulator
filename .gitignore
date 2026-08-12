@@ -1,0 +1,13 @@
+# Build artifacts
+build/
+cmake-build-*/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Local editor and OS files
+.DS_Store
+.vscode/
