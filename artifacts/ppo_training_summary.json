@@ -1,0 +1,62 @@
+{
+  "evaluation_seed_count": 30,
+  "fixed_skew": {
+    "fills": {
+      "maximum": 69.0,
+      "mean": 50.0,
+      "minimum": 37.0,
+      "population_stddev": 6.7577
+    },
+    "final_inventory": {
+      "maximum": 15.0,
+      "mean": -1.0667,
+      "minimum": -19.0,
+      "population_stddev": 9.6192
+    },
+    "mark_to_market_pnl": {
+      "maximum": 259.0,
+      "mean": 52.6667,
+      "minimum": -219.0,
+      "population_stddev": 127.7083
+    },
+    "total_reward": {
+      "maximum": 228.52,
+      "mean": 31.2133,
+      "minimum": -258.92,
+      "population_stddev": 132.4708
+    }
+  },
+  "ppo": {
+    "fills": {
+      "maximum": 80.0,
+      "mean": 59.6667,
+      "minimum": 34.0,
+      "population_stddev": 13.1259
+    },
+    "final_inventory": {
+      "maximum": 4.0,
+      "mean": 0.1333,
+      "minimum": -5.0,
+      "population_stddev": 2.3343
+    },
+    "mark_to_market_pnl": {
+      "maximum": 144.0,
+      "mean": 63.2,
+      "minimum": -80.0,
+      "population_stddev": 48.5712
+    },
+    "total_reward": {
+      "maximum": 134.98,
+      "mean": 55.768,
+      "minimum": -90.78,
+      "population_stddev": 48.8418
+    }
+  },
+  "scope": "small PPO smoke test on the synthetic Gymnasium environment only; not a live-market result",
+  "training": {
+    "algorithm": "PPO (stable-baselines3)",
+    "environment_steps_per_episode": 200,
+    "seed": 20260812,
+    "timesteps": 4096
+  }
+}
