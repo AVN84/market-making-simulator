@@ -134,6 +134,12 @@
         "minimum": -57,
         "population_stddev": 18.9867
       },
+      "gross_spread_capture_pnl": {
+        "maximum": 468,
+        "mean": 395.74,
+        "minimum": 342,
+        "population_stddev": 28.0951
+      },
       "mark_to_market_pnl": {
         "maximum": 962,
         "mean": 176.4,
@@ -145,6 +151,12 @@
         "mean": 22.12,
         "minimum": 7,
         "population_stddev": 10.4099
+      },
+      "negative_markout_loss": {
+        "maximum": 49,
+        "mean": 27.48,
+        "minimum": 16,
+        "population_stddev": 6.1992
       },
       "negative_markout_quantity": {
         "maximum": 49,
@@ -172,6 +184,12 @@
         "minimum": -4,
         "population_stddev": 1.9936
       },
+      "gross_spread_capture_pnl": {
+        "maximum": 417,
+        "mean": 333.89,
+        "minimum": 258,
+        "population_stddev": 31.1666
+      },
       "mark_to_market_pnl": {
         "maximum": 330,
         "mean": 155.61,
@@ -183,6 +201,12 @@
         "mean": 4.84,
         "minimum": 3,
         "population_stddev": 0.771
+      },
+      "negative_markout_loss": {
+        "maximum": 36,
+        "mean": 19.9,
+        "minimum": 6,
+        "population_stddev": 5.8318
       },
       "negative_markout_quantity": {
         "maximum": 33,

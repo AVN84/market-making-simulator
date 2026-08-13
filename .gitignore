@@ -5,9 +5,16 @@ cmake-build-*/
 # Python artifacts
 __pycache__/
 *.py[cod]
+*.egg-info/
 .pytest_cache/
 .venv/
 
 # Local editor and OS files
 .DS_Store
 .vscode/
+
+# Local calibration and smoke artifacts
+artifacts/verification/
+artifacts/research/smoke-benchmark/
+artifacts/research/calibration-400/
+artifacts/research/ppo-smoke/

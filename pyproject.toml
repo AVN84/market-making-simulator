@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "market-making-simulator"
+version = "0.2.0"
+description = "Synthetic market-making research harness and C++20 order book"
+requires-python = ">=3.10"
+dependencies = [
+  "gymnasium>=0.29,<1.1",
+  "numpy>=1.26,<3",
+]
+
+[project.optional-dependencies]
+rl = [
+  "stable-baselines3>=2.3,<3",
+  "torch>=2.2,<3",
+]
+dev = [
+  "ruff>=0.5,<1",
+]
+
+[tool.setuptools]
+package-dir = {"" = "python"}
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

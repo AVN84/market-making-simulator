@@ -7,11 +7,10 @@ so strategy comparisons are reproducible.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
 import json
 import random
+from dataclasses import asdict, dataclass
 from typing import Literal
-
 
 AggressorSide = Literal["buy", "sell"]
 StrategyName = Literal["fixed_spread", "inventory_aware"]
@@ -63,8 +62,10 @@ class BacktestResult:
     final_mid_price: int
     mark_to_market_pnl: int
     max_abs_inventory: int
+    gross_spread_capture_pnl: int
     post_fill_markout_pnl: int
     negative_markout_quantity: int
+    negative_markout_loss: int
 
     def to_json(self) -> str:
         return json.dumps(asdict(self), indent=2, sort_keys=True)
@@ -189,15 +190,18 @@ def _make_quoter(config: BacktestConfig, strategy: StrategyName):
 
 
 def run_backtest(
-    config: BacktestConfig = BacktestConfig(), strategy: StrategyName = "inventory_aware"
+    config: BacktestConfig | None = None,
+    strategy: StrategyName = "inventory_aware",
 ) -> BacktestResult:
     """Replay synthetic flow against a selected two-sided quoting strategy."""
+    config = config or BacktestConfig()
     _validate_config(config)
     inventory = 0
     cash = 0
     fills = buy_fills = sell_fills = max_abs_inventory = 0
     quote_opportunities = fill_opportunity_quantity = 0
-    post_fill_markout_pnl = negative_markout_quantity = 0
+    gross_spread_capture_pnl = post_fill_markout_pnl = 0
+    negative_markout_quantity = negative_markout_loss = 0
     replay = generate_synthetic_replay(config)
     quoter = _make_quoter(config, strategy)
     fill_model = QueueAwareFillModel(config)
@@ -220,16 +224,20 @@ def run_backtest(
             inventory -= quantity
             cash += quote.ask * quantity
             sell_fills += quantity
+            gross_spread_capture = (quote.ask - event.mid_price) * quantity
             markout = (quote.ask - next_mid) * quantity
         else:
             inventory += quantity
             cash -= quote.bid * quantity
             buy_fills += quantity
+            gross_spread_capture = (event.mid_price - quote.bid) * quantity
             markout = (next_mid - quote.bid) * quantity
         fills += quantity
+        gross_spread_capture_pnl += gross_spread_capture
         post_fill_markout_pnl += markout
         if markout < 0:
             negative_markout_quantity += quantity
+            negative_markout_loss += -markout
         max_abs_inventory = max(max_abs_inventory, abs(inventory))
 
     final_mid = replay[-1].mid_price
@@ -246,8 +254,10 @@ def run_backtest(
         final_mid_price=final_mid,
         mark_to_market_pnl=cash + inventory * final_mid,
         max_abs_inventory=max_abs_inventory,
+        gross_spread_capture_pnl=gross_spread_capture_pnl,
         post_fill_markout_pnl=post_fill_markout_pnl,
         negative_markout_quantity=negative_markout_quantity,
+        negative_markout_loss=negative_markout_loss,
     )
 
 

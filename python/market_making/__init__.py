@@ -1,1 +1,1 @@
-"""Deterministic synthetic market replay and inventory-aware market making baseline."""
+"""Synthetic market-making research harness and matching-engine companion."""

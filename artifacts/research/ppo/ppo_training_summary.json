@@ -1,0 +1,408 @@
+{
+  "evaluation": {
+    "regimes": [
+      "calm_low_cost",
+      "calm_high_cost",
+      "volatile_low_cost",
+      "volatile_high_cost"
+    ],
+    "seed_range": [
+      100001,
+      101000
+    ],
+    "session_count": 1000
+  },
+  "policies": {
+    "avellaneda_stoikov": {
+      "fills": {
+        "maximum": 113.0,
+        "mean": 75.1,
+        "minimum": 40.0,
+        "population_stddev": 14.190419
+      },
+      "final_inventory": {
+        "maximum": 14.0,
+        "mean": -0.162,
+        "minimum": -15.0,
+        "population_stddev": 3.639197
+      },
+      "gross_spread_capture_pnl": {
+        "maximum": 248.0,
+        "mean": 169.129,
+        "minimum": 90.0,
+        "population_stddev": 31.777262
+      },
+      "mark_to_market_pnl": {
+        "maximum": 281.59999999998763,
+        "mean": 11.79829,
+        "minimum": -1084.249999999971,
+        "population_stddev": 141.317809
+      },
+      "max_abs_inventory": {
+        "maximum": 21.0,
+        "mean": 6.608,
+        "minimum": 3.0,
+        "population_stddev": 2.282178
+      },
+      "mean_abs_inventory": {
+        "maximum": 7.843333333333334,
+        "mean": 2.190593,
+        "minimum": 0.82,
+        "population_stddev": 0.808243
+      },
+      "negative_markout_loss": {
+        "maximum": 91.0,
+        "mean": 27.273,
+        "minimum": 0.0,
+        "population_stddev": 25.80962
+      },
+      "negative_markout_quantity": {
+        "maximum": 47.0,
+        "mean": 16.088,
+        "minimum": 0.0,
+        "population_stddev": 13.856777
+      },
+      "net_pnl": {
+        "maximum": 277.2999999999876,
+        "mean": 6.2192,
+        "minimum": -1099.2999999999709,
+        "population_stddev": 143.261227
+      },
+      "post_fill_markout_pnl": {
+        "maximum": 178.0,
+        "mean": 72.914,
+        "minimum": -28.0,
+        "population_stddev": 39.65966
+      },
+      "session_pnl_sharpe": 0.043412,
+      "total_reward": {
+        "maximum": 277.2999999999876,
+        "mean": 6.2192,
+        "minimum": -1099.2999999999709,
+        "population_stddev": 143.261227
+      },
+      "transaction_cost_pnl": {
+        "maximum": 16.950000000000014,
+        "mean": 6.39871,
+        "minimum": 0.8000000000000003,
+        "population_stddev": 5.126024
+      }
+    },
+    "bayesian_toxicity": {
+      "fills": {
+        "maximum": 87.0,
+        "mean": 56.232,
+        "minimum": 32.0,
+        "population_stddev": 8.578472
+      },
+      "final_inventory": {
+        "maximum": 6.0,
+        "mean": -0.086,
+        "minimum": -6.0,
+        "population_stddev": 1.698412
+      },
+      "gross_spread_capture_pnl": {
+        "maximum": 221.0,
+        "mean": 133.929,
+        "minimum": 74.0,
+        "population_stddev": 22.800789
+      },
+      "mark_to_market_pnl": {
+        "maximum": 195.65000000002328,
+        "mean": 25.29591,
+        "minimum": -334.0600000000268,
+        "population_stddev": 83.667965
+      },
+      "max_abs_inventory": {
+        "maximum": 7.0,
+        "mean": 3.88,
+        "minimum": 2.0,
+        "population_stddev": 0.782049
+      },
+      "mean_abs_inventory": {
+        "maximum": 2.22,
+        "mean": 1.276167,
+        "minimum": 0.66,
+        "population_stddev": 0.240939
+      },
+      "negative_markout_loss": {
+        "maximum": 56.0,
+        "mean": 16.096,
+        "minimum": 0.0,
+        "population_stddev": 14.413424
+      },
+      "negative_markout_quantity": {
+        "maximum": 32.0,
+        "mean": 9.952,
+        "minimum": 0.0,
+        "population_stddev": 7.897069
+      },
+      "net_pnl": {
+        "maximum": 189.2000000000233,
+        "mean": 22.54788,
+        "minimum": -336.08000000002676,
+        "population_stddev": 83.770601
+      },
+      "post_fill_markout_pnl": {
+        "maximum": 157.0,
+        "mean": 64.117,
+        "minimum": -14.0,
+        "population_stddev": 32.398847
+      },
+      "session_pnl_sharpe": 0.269162,
+      "total_reward": {
+        "maximum": 189.2000000000233,
+        "mean": 22.54788,
+        "minimum": -336.08000000002676,
+        "population_stddev": 83.770601
+      },
+      "transaction_cost_pnl": {
+        "maximum": 13.050000000000011,
+        "mean": 4.78609,
+        "minimum": 0.6800000000000003,
+        "population_stddev": 3.777521
+      }
+    },
+    "fixed_spread": {
+      "fills": {
+        "maximum": 142.0,
+        "mean": 97.032,
+        "minimum": 60.0,
+        "population_stddev": 16.953848
+      },
+      "final_inventory": {
+        "maximum": 45.0,
+        "mean": -0.016,
+        "minimum": -55.0,
+        "population_stddev": 13.852716
+      },
+      "gross_spread_capture_pnl": {
+        "maximum": 284.0,
+        "mean": 194.064,
+        "minimum": 120.0,
+        "population_stddev": 33.907697
+      },
+      "mark_to_market_pnl": {
+        "maximum": 1617.3800000000047,
+        "mean": -2.70282,
+        "minimum": -5359.950000000419,
+        "population_stddev": 455.36446
+      },
+      "max_abs_inventory": {
+        "maximum": 56.0,
+        "mean": 16.158,
+        "minimum": 4.0,
+        "population_stddev": 7.489662
+      },
+      "mean_abs_inventory": {
+        "maximum": 26.513333333333332,
+        "mean": 7.200427,
+        "minimum": 1.3466666666666667,
+        "population_stddev": 4.335876
+      },
+      "negative_markout_loss": {
+        "maximum": 134.0,
+        "mean": 41.379,
+        "minimum": 0.0,
+        "population_stddev": 37.628917
+      },
+      "negative_markout_quantity": {
+        "maximum": 69.0,
+        "mean": 24.031,
+        "minimum": 0.0,
+        "population_stddev": 19.655942
+      },
+      "net_pnl": {
+        "maximum": 1550.7200000000046,
+        "mean": -25.34258,
+        "minimum": -5478.200000000419,
+        "population_stddev": 464.645678
+      },
+      "post_fill_markout_pnl": {
+        "maximum": 183.0,
+        "mean": 73.85,
+        "minimum": -47.0,
+        "population_stddev": 51.133115
+      },
+      "session_pnl_sharpe": -0.054542,
+      "total_reward": {
+        "maximum": 1550.7200000000046,
+        "mean": -25.34258,
+        "minimum": -5478.200000000419,
+        "population_stddev": 464.645678
+      },
+      "transaction_cost_pnl": {
+        "maximum": 20.40000000000001,
+        "mean": 8.26982,
+        "minimum": 1.2000000000000008,
+        "population_stddev": 6.589276
+      }
+    },
+    "inventory_aware": {
+      "fills": {
+        "maximum": 112.0,
+        "mean": 70.936,
+        "minimum": 39.0,
+        "population_stddev": 12.723361
+      },
+      "final_inventory": {
+        "maximum": 5.0,
+        "mean": -0.188,
+        "minimum": -5.0,
+        "population_stddev": 2.27874
+      },
+      "gross_spread_capture_pnl": {
+        "maximum": 253.0,
+        "mean": 159.643,
+        "minimum": 90.0,
+        "population_stddev": 29.278346
+      },
+      "mark_to_market_pnl": {
+        "maximum": 264.6000000000058,
+        "mean": 13.98627,
+        "minimum": -570.6999999999935,
+        "population_stddev": 113.885754
+      },
+      "max_abs_inventory": {
+        "maximum": 5.0,
+        "mean": 4.555,
+        "minimum": 3.0,
+        "population_stddev": 0.550432
+      },
+      "mean_abs_inventory": {
+        "maximum": 3.32,
+        "mean": 1.832657,
+        "minimum": 0.82,
+        "population_stddev": 0.376922
+      },
+      "negative_markout_loss": {
+        "maximum": 84.0,
+        "mean": 25.083,
+        "minimum": 0.0,
+        "population_stddev": 23.610974
+      },
+      "negative_markout_quantity": {
+        "maximum": 46.0,
+        "mean": 14.985,
+        "minimum": 0.0,
+        "population_stddev": 12.774145
+      },
+      "net_pnl": {
+        "maximum": 256.0000000000058,
+        "mean": 10.08888,
+        "minimum": -570.6999999999935,
+        "population_stddev": 114.188491
+      },
+      "post_fill_markout_pnl": {
+        "maximum": 167.0,
+        "mean": 69.589,
+        "minimum": -21.0,
+        "population_stddev": 37.881448
+      },
+      "session_pnl_sharpe": 0.088353,
+      "total_reward": {
+        "maximum": 256.0000000000058,
+        "mean": 10.08888,
+        "minimum": -570.6999999999935,
+        "population_stddev": 114.188491
+      },
+      "transaction_cost_pnl": {
+        "maximum": 16.800000000000015,
+        "mean": 6.04373,
+        "minimum": 0.7800000000000004,
+        "population_stddev": 4.825242
+      }
+    },
+    "ppo": {
+      "fills": {
+        "maximum": 92.0,
+        "mean": 62.071,
+        "minimum": 36.0,
+        "population_stddev": 9.948465
+      },
+      "final_inventory": {
+        "maximum": 7.0,
+        "mean": -0.065,
+        "minimum": -5.0,
+        "population_stddev": 2.239816
+      },
+      "gross_spread_capture_pnl": {
+        "maximum": 218.0,
+        "mean": 140.362,
+        "minimum": 80.0,
+        "population_stddev": 23.85307
+      },
+      "mark_to_market_pnl": {
+        "maximum": 203.1,
+        "mean": 13.64875,
+        "minimum": -549.5,
+        "population_stddev": 108.522687
+      },
+      "max_abs_inventory": {
+        "maximum": 10.0,
+        "mean": 5.053,
+        "minimum": 2.0,
+        "population_stddev": 1.179911
+      },
+      "mean_abs_inventory": {
+        "maximum": 3.37,
+        "mean": 1.6859,
+        "minimum": 0.776667,
+        "population_stddev": 0.394618
+      },
+      "negative_markout_loss": {
+        "maximum": 81.0,
+        "mean": 21.127,
+        "minimum": 0.0,
+        "population_stddev": 19.650366
+      },
+      "negative_markout_quantity": {
+        "maximum": 36.0,
+        "mean": 12.486,
+        "minimum": 0.0,
+        "population_stddev": 10.371876
+      },
+      "net_pnl": {
+        "maximum": 197.68,
+        "mean": 9.90806,
+        "minimum": -549.5,
+        "population_stddev": 108.910117
+      },
+      "post_fill_markout_pnl": {
+        "maximum": 150.0,
+        "mean": 62.528,
+        "minimum": -28.0,
+        "population_stddev": 36.103756
+      },
+      "session_pnl_sharpe": 0.090975,
+      "total_reward": {
+        "maximum": 186.59,
+        "mean": -4.04812,
+        "minimum": -584.97,
+        "population_stddev": 112.209733
+      },
+      "transaction_cost_pnl": {
+        "maximum": 13.05,
+        "mean": 5.29625,
+        "minimum": 0.74,
+        "population_stddev": 4.196125
+      }
+    }
+  },
+  "ppo_percent_change_vs_avellaneda_stoikov": {
+    "gross_spread_capture_pnl": -17.008910358365508,
+    "max_abs_inventory": -23.532082324455203,
+    "negative_markout_loss": -22.535107982253518,
+    "net_pnl": 59.31405968613328
+  },
+  "scope": "seeded synthetic holdout sessions only; no historical or live-market performance",
+  "training": {
+    "algorithm": "PPO",
+    "episode_steps": 300,
+    "library": "stable-baselines3",
+    "observation_timing": "public history before the next aggressive order",
+    "seed": 20260813,
+    "timesteps": 200000,
+    "training_replays": "randomized across seeds and four regimes"
+  }
+}

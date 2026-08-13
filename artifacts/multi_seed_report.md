@@ -11,10 +11,12 @@ This report compares two strategies over the same 100 seeded **synthetic** repla
 | Metric | Fixed spread mean | Inventory-aware mean |
 | --- | ---: | ---: |
 | Mark-to-market P&L (ticks) | 176.4 | 155.61 |
+| Gross spread capture (ticks) | 395.74 | 333.89 |
 | One-step post-fill markout (ticks) | 177.96 | 162.98 |
 | Filled quantity | 197.87 | 155.44 |
 | Max absolute inventory | 22.12 | 4.84 |
 | Negative-markout quantity | 27.48 | 19.5 |
+| Negative-markout loss (ticks) | 27.48 | 19.9 |
 
 ## Interpretation
 

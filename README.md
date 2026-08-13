@@ -1,75 +1,93 @@
 # Market-Making Simulator
 
-An interview-oriented engineering project that separates a **C++20 limit order
-book** from a **deterministic Python market-making simulator**. The goal is to
-make the assumptions inspectable: matching logic lives in C++; synthetic replay,
-strategy comparison, and an optional PPO experiment live in Python.
+An interview-oriented market microstructure project with two testable layers:
 
-> All prices, P&L figures, fills, and experiments in this repository are
-> synthetic tick-based simulations. This is educational software, not a live
-> trading system, investment advice, or a claim about real-market performance.
+- a C++20 price-time-priority limit order book; and
+- a Python research harness for reproducible synthetic strategy experiments.
+
+All prices, fills, P&L values, and comparisons in this repository come from
+seeded synthetic simulations. This is educational software, not a live trading
+system, investment advice, or evidence of real-market performance.
 
 ## What is implemented
 
 ### C++20 matching engine
 
-- Integer-tick price levels with price-time priority.
-- FIFO resting orders at every price level.
-- Limit-order matching, market-order matching, cancellation, and locator-based
-  order lookup.
-- Tests for FIFO behavior, cancellation, and non-resting unfilled market flow.
+- Integer-tick prices with ordered bid and ask maps.
+- FIFO time priority within each price level.
+- Limit and market matching, partial fills, cancellation, and direct order-ID
+  lookup through stable list iterators.
+- Deterministic tests for matching order, cancellation, and non-resting market
+  order remainders.
 
-### Synthetic execution and strategy comparison
+### Synthetic research harness
 
-- Seeded aggressive order-flow generator with a bounded directional-pressure
-  proxy after sufficiently aggressive orders.
-- Fixed-spread reference strategy and inventory-aware reservation-price strategy.
-- A **bounded queue-aware fill proxy**: a marketable order is not guaranteed to
-  reach our quote. At the touch it fills with a configured base probability;
-  every tick it crosses through the quote adds a capped probability increment.
-- One-step post-fill markout tracking. Negative values mean the following
-  synthetic mid moved against the fill; this is a diagnostic for the explicit
-  adverse-selection proxy, not a calibrated impact estimate.
-- Multi-seed experiment runner that emits row-level CSV, aggregate JSON, and a
-  readable report under `artifacts/`.
+- Four regimes spanning calm and volatile flow with low and high transaction
+  costs.
+- Persistent public order flow plus a latent informed-flow process that creates
+  controlled adverse selection.
+- A bounded queue-aware fill model. Strategies share the same event stream and
+  per-event fill uniform, which supports paired comparisons.
+- Explicit per-fill transaction costs and terminal inventory liquidation.
+- Rolling public features computed only from orders that have already arrived.
+  No strategy sees the next order's side, urgency, informed flag, or subsequent
+  price move before quoting.
 
-### Optional RL milestone
+### Rule-based strategies
 
-- A Gymnasium environment where a policy selects one of five bounded inventory
-  skew strengths per event.
-- Stable-Baselines3 PPO training/evaluation script. It is intentionally a small
-  smoke-test workflow, not evidence of a production-quality RL strategy.
+1. `fixed_spread`: constant two-sided reference quote.
+2. `inventory_aware`: reservation-price skew and inventory-dependent widening.
+3. `avellaneda_stoikov`: discrete-tick approximation using inventory, recent
+   variance, risk aversion, and time remaining.
+4. `bayesian_toxicity`: Glosten-Milgrom-inspired public-flow belief that shifts
+   fair value and widens quotes when recent signed price responses look toxic.
+
+The fourth policy is intentionally labeled "inspired." It is not a structural
+calibration of the original Glosten-Milgrom model.
+
+### PPO research policy
+
+The Gymnasium environment exposes six pre-trade public features:
+
+- normalized inventory;
+- trailing flow imbalance;
+- trailing volatility;
+- an EWMA toxicity estimate;
+- the previous mid-price change; and
+- fraction of the session elapsed.
+
+PPO chooses among 27 bounded quote actions covering spread width, inventory
+skew strength, and a small public-flow tilt. Training randomizes both replay
+seed and regime. Evaluation uses a disjoint seed range and compares PPO against
+all four rule-based policies.
 
 ## Architecture
 
 ```text
-C++20 order book
-  order ID -> resting-order locator
-  bids (descending map) / asks (ascending map)
-  price level -> FIFO order list
+C++20 matching engine
+  ordered price levels -> FIFO orders -> trades and cancellation
 
-Python synthetic simulator
-  seeded aggressive order flow
-        -> fixed or inventory-aware quote
-        -> bounded queue-aware fill decision
-        -> cash, inventory, mark-to-market, post-fill markout
-        -> multi-seed artifacts
+Python research harness
+  seeded latent market process
+    -> public state before the next order
+    -> strategy quote
+    -> shared queue-fill uniform
+    -> cash, inventory, costs, markouts, liquidation
+    -> paired CSV and JSON artifacts
 
-Optional Gymnasium/PPO layer
-  observation: mid displacement, inventory, order-flow side/urgency, time
-  action: one of five inventory-skew multipliers
-  reward: one-step marked-wealth change less a small inventory penalty
+Gymnasium and PPO
+  public-history observation -> bounded quote action
+  -> marked-wealth reward less inventory risk and liquidation cost
+  -> disjoint multi-regime holdout evaluation
 ```
 
-The Python simulator currently does not bind to the C++ book. Keeping the two
-layers separate makes the matching invariants and replay assumptions easier to
-review. A future integration could replay events through C++ bindings.
+The Python simulator does not call the C++ book. The C++ layer validates
+matching invariants, while Python keeps research assumptions easy to inspect.
+Binding them is a future integration step, not a completed claim.
 
 ## Quick start
 
 ### C++ tests
-
-Requires a C++20 compiler. If CMake is installed:
 
 ```bash
 cmake -S . -B build
@@ -77,94 +95,98 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-On machines without CMake, compile the test directly:
+Without CMake:
 
 ```bash
-clang++ -std=c++20 -Wall -Wextra -Wpedantic -Icpp/include \
-  cpp/src/order_book.cpp cpp/tests/order_book_tests.cpp -o build/order_book_tests
+mkdir -p build
+clang++ -std=c++20 -Wall -Wextra -Wpedantic -Werror -Icpp/include \
+  cpp/src/order_book.cpp cpp/tests/order_book_tests.cpp \
+  -o build/order_book_tests
 ./build/order_book_tests
 ```
 
-### Python simulator and tests
-
-Requires Python 3.10+.
+### Python tests
 
 ```bash
-PYTHONPATH=python python3 -m market_making.simulator
 PYTHONPATH=python python3 -m unittest discover -s python/tests -v
 ```
 
-### Reproduce the strategy experiment
-
-The following compares both strategies across the same 100 deterministic seeds
-and writes actual results to `artifacts/`:
+### Four-strategy benchmark
 
 ```bash
-PYTHONPATH=python python3 -m market_making.experiments --seeds 100 --steps 500
+PYTHONPATH=python python3 -m market_making.benchmark \
+  --sessions 5000 \
+  --steps 500 \
+  --output-dir artifacts/research/benchmark
 ```
 
-It produces:
+Outputs:
 
-- `artifacts/multi_seed_results.csv`: one row per strategy/seed.
-- `artifacts/multi_seed_summary.json`: aggregate mean, population standard
-  deviation, min, and max.
-- `artifacts/multi_seed_report.md`: concise interpretation of those exact runs.
+- `strategy_results.csv`: one row per strategy and session.
+- `strategy_summary.json`: aggregate and per-regime metrics, plus paired
+  bootstrap confidence intervals against fixed spread.
+- `strategy_report.md`: readable summary of the exact run.
 
-### Optional PPO smoke test
+### PPO training and holdout evaluation
 
-Gymnasium and PyTorch are required. Install Stable-Baselines3 in your local
-Python environment if needed:
+Install the optional dependencies if needed:
 
 ```bash
-python3 -m pip install --user stable-baselines3==2.3.2
-PYTHONPATH=python python3 -m market_making.train_ppo --timesteps 4096 --eval-seeds 30
+python3 -m pip install -e '.[rl]'
 ```
 
-The training script writes `artifacts/ppo_evaluation.csv` and
-`artifacts/ppo_training_summary.json`. It evaluates an agent against the
-fixed-skew action on common synthetic seeds. A small PPO run is a dependency and
-integration check only; it must not be described as an optimized trading model.
+Train and evaluate:
 
-## How to read the metrics
+```bash
+PYTHONPATH=python python3 -m market_making.train_ppo \
+  --timesteps 200000 \
+  --episode-steps 300 \
+  --eval-sessions 1000 \
+  --eval-seed-start 100001 \
+  --output-dir artifacts/research/ppo
+```
 
-- **Mark-to-market P&L**: `cash + inventory * final_mid`. It is in synthetic
-  ticks and is scenario-specific.
-- **Post-fill markout**: one-step value of a fill at the next synthetic mid;
-  negative values flag adverse movement after a fill.
-- **Max absolute inventory**: the largest directional inventory exposure seen.
-- **Filled quantity**: quantity that reached the quote under the queue proxy.
+The output directory contains the saved model, row-level evaluation CSV, and a
+JSON summary for PPO and all rule-based baselines.
 
-For a fair comparison, both strategies receive the identical seeded replay. The
-inventory-aware strategy may lower inventory exposure by accepting fewer fills;
-that trade-off is the result to discuss, not a claim that one strategy wins in
-all markets.
+## Metrics
+
+- **Net P&L**: marked cash and inventory, minus transaction costs already paid
+  and terminal liquidation cost.
+- **Session P&L Sharpe**: mean net P&L across sessions divided by its population
+  standard deviation. It is a synthetic cross-session score, not an annualized
+  live-trading Sharpe ratio.
+- **Gross spread capture**: execution price relative to the public mid at the
+  time of the fill, before fees and later price movement.
+- **Post-fill markout**: fill value at the next synthetic mid.
+- **Negative markout loss**: magnitude of one-step markouts below zero.
+- **Peak inventory**: maximum absolute position within a session.
+- **Fill ratio**: filled quantity divided by quantity that could reach the
+  quote under the crossing rule.
+
+## Reproducibility and limitations
+
+- Randomness is seed-controlled and paired across strategies.
+- Benchmark confidence intervals use deterministic paired bootstrap resampling.
+- Training and evaluation seed ranges are disjoint.
+- The market process is synthetic and deliberately simple. It is not calibrated
+  to an exchange, historical feed, or asset.
+- The queue model is a bounded probability proxy, not actual queue position.
+- The project omits hidden liquidity, latency races, order amendments, exchange
+  rebates, and cross-asset effects.
+- PPO is a research prototype. Its results should be reported even when a
+  simpler policy performs better.
 
 ## Interview walkthrough
 
-1. Start with the C++ book: explain integer ticks, price-time priority, FIFO
-   lists, and why order IDs need a locator for cancellation.
-2. Explain why a backtest cannot assume every marketable order fills. Point to
-   `QueueAwareFillModel` and name its limitation: it is a capped probability
-   proxy for unknown queue position, not a matching-engine queue simulation.
-3. Contrast the two quote policies. The fixed baseline ignores inventory; the
-   inventory-aware rule shifts its reservation price and widens at larger
-   inventory.
-4. Show `artifacts/multi_seed_report.md`, emphasizing common seeds and
-   synthetic-only scope.
-5. Describe the Gym environment as a narrow research interface: PPO chooses a
-   bounded skew multiplier; no claim is made beyond the recorded synthetic
-   evaluation.
-
-## Limitations and next steps
-
-- Synthetic data only: no historical feeds, calibration, live orders, or real
-  money.
-- No exchange-specific queue, hidden liquidity, fees, latency, partial
-  cancellations, or realistic cross-asset effects.
-- Directional pressure and queue-aware fills are explicit bounded assumptions,
-  not estimates fit to data.
-- PPO uses a small discrete action space and lightweight run; it is not tuned or
-  validated out of sample.
-- Useful next engineering steps: bind the Python replay to the C++ book, add
-  fees/latency, validate on carefully licensed historical data, and evaluate
-  policies on held-out regimes with risk-adjusted metrics.
+1. Start with the C++ book and explain price-time priority plus direct
+   cancellation through the order locator.
+2. State the synthetic scope and explain why strategies share event streams and
+   fill uniforms.
+3. Contrast inventory-aware, Avellaneda-Stoikov, and Bayesian toxicity quoting.
+4. Explain the look-ahead safeguard: the quote is chosen before the next order
+   is revealed.
+5. Show the multi-regime benchmark and discuss the P&L, fill, and inventory
+   tradeoff rather than claiming one universal winner.
+6. Treat PPO as an experiment, then name C++ bindings and licensed replay data
+   as the next serious engineering steps.
