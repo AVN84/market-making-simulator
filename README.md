@@ -1,9 +1,11 @@
-# Market-Making Simulator
+# Learning-Based Market Making
 
-An interview-oriented market microstructure project with two testable layers:
+This project combines ML systems with market microstructure by treating quoting
+as a measurable decision problem. It has two testable layers:
 
 - a C++20 price-time-priority limit order book; and
-- a Python research harness for reproducible synthetic strategy experiments.
+- a Python research harness for reproducible rule-based and learned strategy
+  experiments.
 
 All prices, fills, P&L values, and comparisons in this repository come from
 seeded synthetic simulations. This is educational software, not a live trading

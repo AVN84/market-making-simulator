@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "market-making-simulator"
 version = "0.2.0"
-description = "Synthetic market-making research harness and C++20 order book"
+description = "Learning-based market-making research harness and C++20 order book"
 requires-python = ">=3.10"
 dependencies = [
   "gymnasium>=0.29,<1.1",
