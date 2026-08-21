@@ -5,28 +5,26 @@ on:
   pull_request:
 
 jobs:
-  cpp:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Configure
-        run: cmake -S . -B build
-      - name: Build
-        run: cmake --build build --config Release
-      - name: Test
-        run: ctest --test-dir build --output-on-failure
-
-  python:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-          cache: pip
-      - name: Install
+          python-version: "3.11"
+      - name: Install dependencies
         run: python -m pip install -e '.[dev]'
-      - name: Lint
-        run: python -m ruff check .
-      - name: Test
-        run: python -m unittest discover -s python/tests -v
+      - name: Build and test C++ order book
+        run: |
+          cmake -S . -B build
+          cmake --build build
+          ctest --test-dir build --output-on-failure
+      - name: Test and lint Python research harness
+        run: |
+          python -m unittest discover -s python/tests -v
+          python -m ruff check python
+      - name: Verify checked-in research artifacts
+        run: |
+          python -m market_making.verify_resume_metrics
+          cd artifacts/research
+          sha256sum -c SHA256SUMS
